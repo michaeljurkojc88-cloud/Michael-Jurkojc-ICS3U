@@ -1,5 +1,7 @@
 import pygame
 
+import random
+
 pygame.init()
 
 SCREEN_WIDTH = 1000
@@ -25,18 +27,23 @@ GREY = (150, 150, 150)
 enemy_y = 50
 enemy_x = 50
 enemy_speed = 4
+enemy_size = 50
 
 enemy2_x = 200
 enemy2_y = 50
 enemy2_bottom = False
 enemy2_top = True
 enemy2_speed = 10
+enemy2_height = 75
+enemy2_width = 25
 
 enemy3_x = 725
 enemy3_y = 950
 enemy3_top = False
 enemy3_bottom = True
 enemy3_speed = 10
+enemy3_height = 75
+enemy3_width = 25
 
 player_y = 475
 player_x = 475
@@ -46,11 +53,16 @@ lifes = 3
 
 enemy_bullet_speed = 10
 bullet_active = False
+bullet_size = 15
 
 enemy_bullet2_speed = 10
 bullet2_active = False
+bullet2_size = 15
 
-time = 120
+time = 5
+
+level = 1
+
 win = False
 
 COUNTDOWN_EVENT = pygame.USEREVENT + 1
@@ -64,19 +76,14 @@ while running:
         elif event.type == COUNTDOWN_EVENT:
             if time > 0:
                 time -= 1
-               
-            elif time <= 0:
-                win = True
-            if win == True:
-                font = pygame.font.SysFont(None, 48)
-                message = font.render("YOU WIN!", True, BLACK)
-                screen.blit(message, (425, 180))
-                speed = 0
-                enemy_speed = 0
-                enemy2_speed = 0
-                enemy3_speed = 0
 
     keys = pygame.key.get_pressed()
+
+    """
+    ================================
+    Player movements and boundries
+    ================================
+    """
 
     if keys[pygame.K_w]:
         player_y = player_y - speed
@@ -102,6 +109,12 @@ while running:
     if player_y > SCREEN_HEIGHT - player_size:
         player_y = SCREEN_HEIGHT - player_size
 
+    """
+    ================================
+    Enemy projectiles
+    ================================
+    """
+
     if not bullet_active:
         bullet_x = enemy2_x 
         bullet_y = enemy2_y
@@ -125,19 +138,31 @@ while running:
                 bullet2_active = False
 
     if bullet_active:
-        pygame.draw.rect(screen, RED, (bullet_x, bullet_y, 15, 15))
+        pygame.draw.rect(screen, RED, (bullet_x, bullet_y, bullet_size, bullet_size))
 
     if bullet2_active:
-        pygame.draw.rect(screen, RED, (bullet2_x, bullet2_y, 15, 15))
+        pygame.draw.rect(screen, RED, (bullet2_x, bullet2_y, bullet2_size, bullet2_size))
+    
+    """
+    ================================
+    Creating the bullets
+    ================================
+    """
 
-    player_rect = pygame.Rect(player_x, player_y, 25, 25)
+    player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
 
-    enemy_rect = pygame.Rect(enemy_x, enemy_y, 50, 50)
-    enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, 25, 75)
-    enemy3_rect = pygame.Rect(enemy3_x, enemy3_y, 25, 75)
+    enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+    enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, enemy2_width, enemy2_height)
+    enemy3_rect = pygame.Rect(enemy3_x, enemy3_y, enemy2_width, enemy2_height)
 
-    bullet_rect = pygame.Rect(bullet_x,bullet_y,15,15)
-    bullet_rect2 = pygame.Rect(bullet2_x,bullet2_y,15,15)
+    bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_size, bullet_size)
+    bullet_rect2 = pygame.Rect(bullet2_x, bullet2_y, bullet2_size, bullet2_size)
+
+    """
+    ================================
+    Collisions
+    ================================
+    """
 
     if bullet_rect.colliderect(player_rect):
         lifes -= 1
@@ -175,6 +200,11 @@ while running:
             bullet2_active = False
             bullet_active = False
 
+    """
+    ================================
+    Enemy movments
+    ================================
+    """
 
     if enemy_x < player_x:
         enemy_x += enemy_speed
@@ -209,6 +239,12 @@ while running:
             enemy3_bottom = False
             enemy3_top = True
 
+    """
+    ================================
+    Life counter
+    ================================
+    """
+
     pygame.draw.rect(screen, BLACK, (30, 33, 60, 60))
     pygame.draw.rect(screen, WHITE, (35, 38, 50, 50))
 
@@ -216,17 +252,126 @@ while running:
     message = font.render(f"{lifes}", True, BLACK)
     screen.blit(message, (50, 50))
 
+    font = pygame.font.SysFont(None, 48)
+    message = font.render(f"Lives", True, BLACK)
+    screen.blit(message, (25, 100))
+
+    """
+    ================================
+    Timer
+    ================================
+    """
+
     pygame.draw.rect(screen, BLACK, (443, 33, 90, 60))
     pygame.draw.rect(screen, WHITE, (448, 38, 80, 50))
-    
+
     font = pygame.font.SysFont(None, 55)
     message = font.render(f"{time}", True, BLACK)
     screen.blit(message, (455, 50))
 
-    pygame.draw.rect(screen, RED, (enemy_x, enemy_y, 50, 50))
+    font = pygame.font.SysFont(None, 55)
+    message = font.render(f"Time", True, BLACK)
+    screen.blit(message, (435, 100))
+
+    """
+    ================================
+    Level
+    ================================
+    """
+
+    pygame.draw.rect(screen, BLACK, (925, 33, 60, 60))
+    pygame.draw.rect(screen, WHITE, (930, 38, 50, 50))
+
+    font = pygame.font.SysFont(None, 48)
+    message = font.render(f"{level}", True, BLACK)
+    screen.blit(message, (945, 50))
+
+    font = pygame.font.SysFont(None, 48)
+    message = font.render(f"Level", True, BLACK)
+    screen.blit(message, (915, 100))
+
+    """
+    ================================
+    Drawing enemies and player
+    ================================
+    """
+
+    pygame.draw.rect(screen, RED, (enemy_x, enemy_y, enemy_size, enemy_size))
     pygame.draw.rect(screen, GREEN, (player_x, player_y, player_size, player_size))
-    pygame.draw.rect(screen, PURPLE, (enemy2_x, enemy2_y, 25, 75))
-    pygame.draw.rect(screen, PURPLE, (enemy3_x, enemy3_y, 25, 75))
+    pygame.draw.rect(screen, PURPLE, (enemy2_x, enemy2_y, enemy2_width, enemy2_height))
+    pygame.draw.rect(screen, PURPLE, (enemy3_x, enemy3_y, enemy3_width, enemy3_height))
+
+    if time <= 0:
+        enemy_x = 50
+        enemy_y = 50
+
+        enemy_size = 30
+
+        enemy2_x = 275
+        enemy2_y = 150
+
+        enemy2_height = 50
+        enemy2_width = 450
+      
+        enemy3_heigth = 0
+        enemy3_width = 0
+        bullet_size = 0
+        bullet2_size = 0
+        bullet_y = 0
+        bullet_x = 0
+        bullet2_y = 0
+        bullet2_x = 0
+
+        enemy_speed = 0
+        enemy2_speed = 0
+        enemy3_speed = 0
+        enemy_bullet_speed = 0
+        enemy_bullet2_speed = 0
+
+        player_x = 475
+        player_y = 475
+
+        level += 1
+
+        lifes += 1
+
+        time = 65
+
+        if level == 2:
+            if time <= 60:
+                enemy_speed = 4
+                enemy2_speed = 10
+
+                player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
+                
+                enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+                enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, enemy2_width, enemy2_height)
+
+                if enemy_x < player_x:
+                    enemy_x += enemy_speed
+                elif enemy_x > player_x:
+                    enemy_x -= enemy_speed
+                if enemy_y < player_y:
+                    enemy_y += enemy_speed
+                elif enemy_y > player_y:
+                    enemy_y -= enemy_speed
+
+                if enemy2_bottom == False:
+                    enemy2_y += enemy2_speed
+                    if enemy2_y == 850:
+                        enemy2_top = False
+                        enemy2_bottom = True
+                
+                if enemy2_top == False:
+                    enemy2_y -= enemy2_speed
+                    if enemy2_y == 150:
+                        enemy2_bottom = False
+                        enemy2_top = True
+
+                pygame.draw.rect(screen, RED, (enemy_x, enemy_y, enemy_size, enemy_size))
+                pygame.draw.rect(screen, PURPLE, (enemy2_x, enemy2_y, enemy2_width, enemy2_height))
+
+
 
     pygame.display.flip() 
 
