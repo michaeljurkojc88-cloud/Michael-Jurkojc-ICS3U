@@ -145,7 +145,7 @@ while running:
     
     """
     ================================
-    Creating the bullets
+    Creating the hitboxes
     ================================
     """
 
@@ -315,6 +315,9 @@ while running:
       
         enemy3_heigth = 0
         enemy3_width = 0
+        enemy3_x = 0
+        enemy3_y = 0
+
         bullet_size = 0
         bullet2_size = 0
         bullet_y = 0
@@ -322,54 +325,21 @@ while running:
         bullet2_y = 0
         bullet2_x = 0
 
-        enemy_speed = 0
-        enemy2_speed = 0
-        enemy3_speed = 0
         enemy_bullet_speed = 0
         enemy_bullet2_speed = 0
+        bullet2_active = False
+        bullet_active = False
 
         player_x = 475
-        player_y = 475
-
-        level += 1
+        player_y = 800
 
         lifes += 1
 
-        time = 65
+        time = 60
 
-        if level == 2:
-            if time <= 60:
-                enemy_speed = 4
-                enemy2_speed = 10
-
-                player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
-                
-                enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
-                enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, enemy2_width, enemy2_height)
-
-                if enemy_x < player_x:
-                    enemy_x += enemy_speed
-                elif enemy_x > player_x:
-                    enemy_x -= enemy_speed
-                if enemy_y < player_y:
-                    enemy_y += enemy_speed
-                elif enemy_y > player_y:
-                    enemy_y -= enemy_speed
-
-                if enemy2_bottom == False:
-                    enemy2_y += enemy2_speed
-                    if enemy2_y == 850:
-                        enemy2_top = False
-                        enemy2_bottom = True
-                
-                if enemy2_top == False:
-                    enemy2_y -= enemy2_speed
-                    if enemy2_y == 150:
-                        enemy2_bottom = False
-                        enemy2_top = True
-
-                pygame.draw.rect(screen, RED, (enemy_x, enemy_y, enemy_size, enemy_size))
-                pygame.draw.rect(screen, PURPLE, (enemy2_x, enemy2_y, enemy2_width, enemy2_height))
+        enemy3_rect = pygame.Rect(0, 0, 0, 0)
+        bullet_rect = pygame.Rect(0, 0, 0, 0)
+        bullet_rect2 = pygame.Rect(0, 0, 0, 0)
 
 
 
