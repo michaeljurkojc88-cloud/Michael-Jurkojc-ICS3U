@@ -1,0 +1,298 @@
+import pygame
+import random
+
+pygame.init()
+
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 1000
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Enemys and Player")
+
+running = True
+clock = pygame.time.Clock()
+
+# Colors
+RED = (255, 0, 0)
+PURPLE = (255, 0, 255)
+BLUE = (0, 0, 255)
+CYAN = (0, 255, 0)
+GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREY = (150, 150, 150)
+
+# Enemy 1
+enemy_y = 50
+enemy_x = 50
+enemy_speed = 4
+enemy_size = 50
+
+# Enemy 2
+enemy2_x = 200
+enemy2_y = 50
+enemy2_bottom = False
+enemy2_top = True
+enemy2_speed = 10
+enemy2_height = 75
+enemy2_width = 25
+
+# Enemy 3
+enemy3_x = 725
+enemy3_y = 950
+enemy3_top = False
+enemy3_bottom = True
+enemy3_speed = 10
+enemy3_height = 75
+enemy3_width = 25
+
+# Player
+player_y = 475
+player_x = 475
+player_size = 25
+speed = 8
+lifes = 3
+
+# Bullets
+bullet_x, bullet_y = 0, 0
+enemy_bullet_speed = 10
+bullet_active = False
+bullet_size = 15
+
+bullet2_x, bullet2_y = 0, 0
+enemy_bullet2_speed = 10
+bullet2_active = False
+bullet2_size = 15
+
+time = 5
+level = 1
+win = False
+
+COUNTDOWN_EVENT = pygame.USEREVENT + 1
+pygame.time.set_timer(COUNTDOWN_EVENT, 1000)
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == COUNTDOWN_EVENT:
+            if time > 0:
+                time -= 1
+
+    keys = pygame.key.get_pressed()
+
+    """
+    ================================
+    Player movements and boundaries
+    ================================
+    """
+    if keys[pygame.K_w]:
+        player_y -= speed
+    if keys[pygame.K_s]:
+        player_y += speed
+    if keys[pygame.K_a]:
+        player_x -= speed
+    if keys[pygame.K_d]:
+        player_x += speed
+
+    if player_x < 0:
+        player_x = 0
+    if player_x > SCREEN_WIDTH - player_size:
+        player_x = SCREEN_WIDTH - player_size
+    if player_y < 0:
+        player_y = 0
+    if player_y > SCREEN_HEIGHT - player_size:
+        player_y = SCREEN_HEIGHT - player_size
+
+    """
+    ================================
+    Enemy projectiles logic
+    ================================
+    """
+    if not bullet_active and bullet_size > 0:
+        bullet_x = enemy2_x 
+        bullet_y = enemy2_y
+        bullet_active = True
+
+    if bullet_active:
+        bullet_x += enemy_bullet_speed 
+        if bullet_x >= SCREEN_WIDTH or bullet_y >= SCREEN_HEIGHT or bullet_y <= 0 or bullet_x <= 0:                      
+            bullet_active = False
+
+    if not bullet2_active and bullet2_size > 0:
+        bullet2_x = enemy3_x 
+        bullet2_y = enemy3_y
+        bullet2_active = True
+    
+    if bullet2_active:
+        bullet2_x -= enemy_bullet2_speed 
+        if bullet2_x >= SCREEN_WIDTH or bullet2_y >= SCREEN_HEIGHT or bullet2_y <= 0 or bullet_x <= 0:                      
+            bullet2_active = False
+
+    """
+    ================================
+    Creating the hitboxes safely
+    ================================
+    """
+    player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
+    enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+    enemy2_rect = pygame.Rect(enemy2_x, enemy2_y, enemy2_width, enemy2_height)
+    enemy3_rect = pygame.Rect(enemy3_x, enemy3_y, enemy3_width, enemy3_height)
+
+    # Use off-screen rects if bullets are inactive to prevent ghost collisions
+    if bullet_active:
+        bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_size, bullet_size)
+    else:
+        bullet_rect = pygame.Rect(-100, -100, 0, 0)  # FIX
+
+    if bullet2_active:
+        bullet_rect2 = pygame.Rect(bullet2_x, bullet2_y, bullet2_size, bullet2_size)
+    else:
+        bullet_rect2 = pygame.Rect(-100, -100, 0, 0) # FIX
+
+    """
+    ================================
+    Collisions
+    ================================
+    """
+    hit = False
+
+    if bullet_active and bullet_rect.colliderect(player_rect): # FIX
+        hit = True
+
+    if bullet2_active and bullet_rect2.colliderect(player_rect): # FIX
+        hit = True
+
+    if player_rect.colliderect(enemy_rect) or player_rect.colliderect(enemy2_rect) or (enemy3_width > 0 and player_rect.colliderect(enemy3_rect)): # FIX
+        hit = True
+
+    if hit:
+        lifes -= 1
+        if lifes <= 0:
+            running = False
+        else:
+            enemy_x = 50
+            enemy_y = 50
+            player_x = 475
+            player_y = 475
+            bullet_active = False
+            bullet2_active = False
+
+    """
+    ================================
+    Enemy movements
+    ================================
+    """
+    if enemy_x < player_x:
+        enemy_x += enemy_speed
+    elif enemy_x > player_x:
+        enemy_x -= enemy_speed
+
+    if enemy_y < player_y:
+        enemy_y += enemy_speed
+    elif enemy_y > player_y:
+        enemy_y -= enemy_speed
+    
+    # Enemy 2 movement
+    if not enemy2_bottom:
+        enemy2_y += enemy2_speed
+        if enemy2_y >= SCREEN_HEIGHT - enemy2_height: # FIX
+            enemy2_top = False
+            enemy2_bottom = True
+
+    if not enemy2_top:
+        enemy2_y -= enemy2_speed
+        if enemy2_y <= 0: # FIX
+            enemy2_bottom = False
+            enemy2_top = True
+
+    # Enemy 3 movement
+    if not enemy3_bottom:
+        enemy3_y += enemy3_speed
+        if enemy3_y >= SCREEN_HEIGHT - enemy3_height: # FIX
+            enemy3_top = False
+            enemy3_bottom = True
+    
+    if not enemy3_top:
+        enemy3_y -= enemy3_speed
+        if enemy3_y <= 0: # FIX
+            enemy3_bottom = False
+            enemy3_top = True
+
+    """
+    ================================
+    Level Transition (Time Expired)
+    ================================
+    """
+    if time <= 0:
+        level += 1
+        enemy_x = 50
+        enemy_y = 50
+        enemy_size = 30
+
+        enemy2_x = 275
+        enemy2_y = 150
+        enemy2_height = 50
+        enemy2_width = 450
+      
+        enemy3_height = 0
+        enemy3_width = 0
+        enemy3_x = -100 # FIX
+        enemy3_y = -100 # FIX
+
+        bullet_size = 0
+        bullet2_size = 0
+        bullet_active = False
+        bullet2_active = False
+
+        player_x = 475
+        player_y = 800
+
+        lifes += 1
+        time = 60
+
+    """
+    ================================
+    Drawing Elements
+    ================================
+    """
+    screen.fill(GREY) # FIX (moved to the start of drawing phase)
+
+    # Draw Bullets
+    if bullet_active:
+        pygame.draw.rect(screen, RED, bullet_rect)
+    if bullet2_active:
+        pygame.draw.rect(screen, RED, bullet_rect2)
+
+    # Draw Enemies and Player
+    pygame.draw.rect(screen, RED, enemy_rect)
+    pygame.draw.rect(screen, GREEN, player_rect)
+    pygame.draw.rect(screen, PURPLE, enemy2_rect)
+    if enemy3_width > 0:
+        pygame.draw.rect(screen, PURPLE, enemy3_rect)
+
+    # UI Display - Lives
+    pygame.draw.rect(screen, BLACK, (30, 33, 60, 60))
+    pygame.draw.rect(screen, WHITE, (35, 38, 50, 50))
+    font = pygame.font.SysFont(None, 48)
+    screen.blit(font.render(f"{lifes}", True, BLACK), (50, 50))
+    screen.blit(font.render("Lives", True, BLACK), (25, 100))
+
+    # UI Display - Timer
+    pygame.draw.rect(screen, BLACK, (443, 33, 90, 60))
+    pygame.draw.rect(screen, WHITE, (448, 38, 80, 50))
+    font_large = pygame.font.SysFont(None, 55)
+    screen.blit(font_large.render(f"{time}", True, BLACK), (455, 50))
+    screen.blit(font_large.render("Time", True, BLACK), (435, 100))
+
+    # UI Display - Level
+    pygame.draw.rect(screen, BLACK, (925, 33, 60, 60))
+    pygame.draw.rect(screen, WHITE, (930, 38, 50, 50))
+    screen.blit(font.render(f"{level}", True, BLACK), (945, 50))
+    screen.blit(font.render("Level", True, BLACK), (915, 100))
+
+    pygame.display.flip() 
+    clock.tick(60)
+
+pygame.quit()
