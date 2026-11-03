@@ -65,7 +65,7 @@ enemy_bullet2_speed = 10
 bullet2_active = False
 bullet2_size = 15
 
-time = 60
+time = 30
 level = 1
 win = False
 
@@ -87,13 +87,13 @@ while running:
     Player movements and boundaries
     ================================
     """
-    if keys[pygame.K_w]:
+    if keys[pygame.K_w] or keys[pygame.K_UP]:
         player_y -= speed
-    if keys[pygame.K_s]:
+    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
         player_y += speed
-    if keys[pygame.K_a]:
+    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
         player_x -= speed
-    if keys[pygame.K_d]:
+    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         player_x += speed
 
     if player_x < 0:
@@ -127,7 +127,7 @@ while running:
     
     if bullet2_active:
         bullet2_x -= enemy_bullet2_speed 
-        if bullet2_x >= SCREEN_WIDTH or bullet2_y >= SCREEN_HEIGHT or bullet2_y <= 0 or bullet_x <= 0:                      
+        if bullet2_x >= SCREEN_WIDTH or bullet2_y >= SCREEN_HEIGHT or bullet2_y <= 0 or bullet2_x <= 0:                      
             bullet2_active = False
 
     """
@@ -184,7 +184,14 @@ while running:
                 enemy_y = 50
                 player_x = 950
                 player_y = 900
-                
+            elif level == 3:
+                enemy_x = 50
+                enemy_y = 50
+                enemy2_y = 0
+                enemy3_y = 950
+                player_x = 50
+                player_y = 900
+    
 
     """
     ================================
@@ -223,7 +230,7 @@ while running:
     
     if not enemy3_top:
         enemy3_y -= enemy3_speed
-        if enemy3_y <= 0: # FIX
+        if enemy3_y <= 0: 
             enemy3_bottom = False
             enemy3_top = True
 
@@ -233,10 +240,11 @@ while running:
     ================================
     """
     if time <= 0 and level == 1:
+        time = 30
         level += 1
         enemy_x = 50
         enemy_y = 50
-        enemy_size = 30
+        enemy_size = 50
 
         enemy2_x = 150
         enemy2_y = 150
@@ -255,18 +263,84 @@ while running:
         bullet_active = False
         bullet2_active = False
 
-        player_x = 475
+        player_x = 950
         player_y = 800
 
         lifes += 1
-        time = 60
+        
+
+    if time <= 0 and level == 2:
+        time = 30
+        level += 1
+        enemy_x = 50
+        enemy_y = 50
+        enemy_size = 50
+
+        enemy2_x = 0
+        enemy2_y = 50
+        enemy2_height = 50
+        enemy2_width = 500
+        enemy2_speed = 4
+        
+        enemy3_height = 50
+        enemy3_width = 500
+        enemy3_x = 500 
+        enemy3_y = 950 
+        enemy3_speed = 4
+
+        bullet_size = 0
+        bullet2_size = 0
+        bullet_active = False
+        bullet2_active = False
+
+        player_x = 100
+        player_y = 800
+
+        lifes += 1
+
+    if time <= 15 and level == 3:
+        enemy2_speed = 8
+        enemy3_speed = 8
+        enemy2_height = 75
+        enemy3_height = 75
+
+    if time <= 0 and level == 3:
+        time = 30
+        level += 1
+        enemy_x = 50
+        enemy_y = 50
+        enemy_size = 50
+
+        enemy2_x = 450
+        enemy2_y = 450
+        enemy2_height = 50
+        enemy2_width = 500
+        enemy2_speed = 4
+        
+        enemy3_height = 50
+        enemy3_width = 500
+        enemy3_x = 500 
+        enemy3_y = 950 
+        enemy3_speed = 4
+
+        bullet_size = 0
+        bullet2_size = 0
+        bullet_active = False
+        bullet2_active = False
+
+        player_x = 100
+        player_y = 800
+
+        lifes += 1
+
+
 
     """
     ================================
     Drawing Elements
     ================================
     """
-    screen.fill(GREY) # FIX (moved to the start of drawing phase)
+    screen.fill(GREY) 
 
     # Draw Bullets
     if bullet_active:
