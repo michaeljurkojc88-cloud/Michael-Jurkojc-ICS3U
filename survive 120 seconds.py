@@ -67,7 +67,7 @@ bullet2_active = False
 bullet2_width = 15
 bullet2_height = 15
 
-time = 5
+time = 30
 level = 1
 win = False
 
@@ -181,7 +181,7 @@ while running:
                 player_y = 475
                 bullet_active = False
                 bullet2_active = False
-                
+
             elif level == 2:
                 enemy_x = 50
                 enemy_y = 50
@@ -254,7 +254,7 @@ while running:
     ================================
     """
     if time <= 0 and level == 1:
-        time = 5
+        time = 30
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -286,7 +286,7 @@ while running:
         
 
     if time <= 0 and level == 2:
-        time = 5
+        time = 30
         level += 1
         enemy_x = 50
         enemy_y = 50
