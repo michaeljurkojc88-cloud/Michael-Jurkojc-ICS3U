@@ -58,14 +58,16 @@ lifes = 3
 bullet_x, bullet_y = 0, 0
 enemy_bullet_speed = 10
 bullet_active = False
-bullet_size = 15
+bullet_width = 15
+bullet_height = 15
 
 bullet2_x, bullet2_y = 0, 0
 enemy_bullet2_speed = 10
 bullet2_active = False
-bullet2_size = 15
+bullet2_width = 15
+bullet2_height = 15
 
-time = 30
+time = 5
 level = 1
 win = False
 
@@ -110,7 +112,7 @@ while running:
     Enemy projectiles logic
     ================================
     """
-    if not bullet_active and bullet_size > 0:
+    if not bullet_active and bullet_height > 0 and bullet_width > 0:
         bullet_x = enemy2_x 
         bullet_y = enemy2_y
         bullet_active = True
@@ -120,7 +122,7 @@ while running:
         if bullet_x >= SCREEN_WIDTH or bullet_y >= SCREEN_HEIGHT or bullet_y <= 0 or bullet_x <= 0:                      
             bullet_active = False
 
-    if not bullet2_active and bullet2_size > 0:
+    if not bullet2_active and bullet2_height > 0 and bullet2_width > 0:
         bullet2_x = enemy3_x 
         bullet2_y = enemy3_y
         bullet2_active = True
@@ -142,12 +144,12 @@ while running:
 
     # Use off-screen rects if bullets are inactive to prevent ghost collisions
     if bullet_active:
-        bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_size, bullet_size)
+        bullet_rect = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
     else:
         bullet_rect = pygame.Rect(-100, -100, 0, 0) 
 
     if bullet2_active:
-        bullet_rect2 = pygame.Rect(bullet2_x, bullet2_y, bullet2_size, bullet2_size)
+        bullet_rect2 = pygame.Rect(bullet2_x, bullet2_y, bullet2_width, bullet2_height)
     else:
         bullet_rect2 = pygame.Rect(-100, -100, 0, 0) 
 
@@ -179,11 +181,13 @@ while running:
                 player_y = 475
                 bullet_active = False
                 bullet2_active = False
+                
             elif level == 2:
                 enemy_x = 50
                 enemy_y = 50
                 player_x = 950
                 player_y = 900
+
             elif level == 3:
                 enemy_x = 50
                 enemy_y = 50
@@ -191,6 +195,16 @@ while running:
                 enemy3_y = 950
                 player_x = 50
                 player_y = 900
+
+            elif level == 4:
+                enemy_x = 50
+                enemy_y = 50
+                enemy2_y = 0
+                enemy3_y = 600
+                player_x = 450
+                player_y = 850
+                bullet_active = False
+                bullet2_active = False
     
 
     """
@@ -240,7 +254,7 @@ while running:
     ================================
     """
     if time <= 0 and level == 1:
-        time = 30
+        time = 5
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -258,8 +272,10 @@ while running:
         enemy3_y = 550 
         enemy3_speed = 8
 
-        bullet_size = 0
-        bullet2_size = 0
+        bullet_width = 0
+        bullet_height = 0
+        bullet2_height = 0
+        bullet2_width = 0
         bullet_active = False
         bullet2_active = False
 
@@ -270,7 +286,7 @@ while running:
         
 
     if time <= 0 and level == 2:
-        time = 30
+        time = 5
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -311,24 +327,28 @@ while running:
         enemy_y = 50
         enemy_size = 50
 
-        enemy2_x = 450
-        enemy2_y = 450
-        enemy2_height = 50
-        enemy2_width = 500
-        enemy2_speed = 4
+        enemy2_x = 100
+        enemy2_y = 50
+        enemy2_height = 250
+        enemy2_width = 50
+        enemy2_speed = 6
         
-        enemy3_height = 50
-        enemy3_width = 500
-        enemy3_x = 500 
-        enemy3_y = 950 
-        enemy3_speed = 4
+        enemy3_height = 250
+        enemy3_width = 50
+        enemy3_x = 850 
+        enemy3_y = 600 
+        enemy3_speed = 6
 
-        bullet_size = 0
-        bullet2_size = 0
-        bullet_active = False
-        bullet2_active = False
+        bullet_width = 30
+        bullet_height = 250
+        bullet2_height = 250
+        bullet2_width = 30
+        bullet_active = True
+        bullet2_active = True
+        enemy_bullet_speed = 8
+        enemy_bullet2_speed = 8
 
-        player_x = 100
+        player_x = 450
         player_y = 800
 
         lifes += 1
