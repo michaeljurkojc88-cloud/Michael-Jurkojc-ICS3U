@@ -346,6 +346,7 @@ while running:
 
     if time <= 0 and level == 3:
         time = 30
+        level += 1
         enemy_x = 50
         enemy_y = 50
         enemy_size = 50
