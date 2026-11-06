@@ -67,7 +67,7 @@ bullet2_active = False
 bullet2_width = 15
 bullet2_height = 15
 
-time = 30
+time = 3
 level = 1
 win = False
 
@@ -254,7 +254,7 @@ while running:
     ================================
     """
     if time <= 0 and level == 1:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -286,7 +286,7 @@ while running:
         
 
     if time <= 0 and level == 2:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -329,30 +329,70 @@ while running:
 
         enemy2_x = 100
         enemy2_y = 50
-        enemy2_height = 250
-        enemy2_width = 50
+        enemy2_height = 150
+        enemy2_width = 25
         enemy2_speed = 6
         
-        enemy3_height = 250
-        enemy3_width = 50
+        enemy3_height = 150
+        enemy3_width = 25
         enemy3_x = 850 
         enemy3_y = 600 
         enemy3_speed = 6
 
-        bullet_width = 30
-        bullet_height = 250
-        bullet2_height = 250
-        bullet2_width = 30
+        bullet_width = 20
+        bullet_height = 150
+        bullet2_height = 150
+        bullet2_width = 20
         bullet_active = True
         bullet2_active = True
-        enemy_bullet_speed = 8
-        enemy_bullet2_speed = 8
+        enemy_bullet_speed = 4
+        enemy_bullet2_speed = 4
 
         player_x = 450
         player_y = 800
 
         lifes += 1
 
+    if level == 4 and time <= 15:
+        bullet2_height += 0.5
+        bullet_height += 0.5
+        enemy2_height += 0.5
+        enemy3_height += 0.5
+
+    if time <= 0 and level == 4:
+        time = 30
+        level += 1
+        enemy_x = 50
+        enemy_y = 50
+        enemy_size = 50
+
+        enemy2_x = 900
+        enemy2_y = 350
+        enemy2_height = 75
+        enemy2_width = 75
+        enemy2_speed = 0
+        
+        enemy3_height = 75
+        enemy3_width = 75
+        enemy3_x = 900
+        enemy3_y = 350 
+        enemy3_speed = 0
+
+        bullet_width = 20
+        bullet_height = 150
+        bullet2_height = 150
+        bullet2_width = 20
+        bullet_active = True
+        bullet2_active = True
+        enemy_bullet_speed = 4
+        enemy_bullet2_speed = 4
+
+        player_x = 450
+        player_y = 800
+
+        lifes += 1
+
+        
 
 
     """
