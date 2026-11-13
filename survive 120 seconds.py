@@ -34,7 +34,10 @@ enemy2_x = 200
 enemy2_y = 50
 enemy2_bottom = False
 enemy2_top = True
+enemy2_left = True
+enemy2_right = False
 enemy2_speed = 10
+enemy2_horispeed = 0
 enemy2_height = 75
 enemy2_width = 25
 
@@ -43,7 +46,10 @@ enemy3_x = 725
 enemy3_y = 950
 enemy3_top = False
 enemy3_bottom = True
+enemy3_left = False
+enemy3_right = True
 enemy3_speed = 10
+enemy3_horispeed = 0
 enemy3_height = 75
 enemy3_width = 25
 
@@ -67,7 +73,7 @@ bullet2_active = False
 bullet2_width = 15
 bullet2_height = 15
 
-time = 30
+time = 3
 level = 1
 win = False
 
@@ -228,6 +234,16 @@ while running:
                 enemy3_y = 25
                 bullet_active = False
                 bullet2_active = False
+
+            elif level == 6:
+                enemy_x = 50
+                enemy_y = 50
+                player_x = 450
+                player_y = 950
+                enemy2_y = 0
+                enemy3_y = 0
+                bullet_active = False
+                bullet2_active = False
                 
     
 
@@ -272,13 +288,37 @@ while running:
             enemy3_bottom = False
             enemy3_top = True
 
+    if not enemy2_right:
+        enemy2_x += enemy2_horispeed
+        if enemy2_x >= SCREEN_WIDTH - enemy2_width: 
+            enemy2_left = False
+            enemy2_right = True
+
+    if not enemy2_left:
+        enemy2_x -= enemy2_horispeed
+        if enemy2_x <= 0: 
+            enemy2_right = False
+            enemy2_left = True
+
+    if not enemy3_right:
+        enemy3_x += enemy3_horispeed
+        if enemy3_x >= SCREEN_WIDTH - enemy3_width: 
+            enemy3_left = False
+            enemy3_right = True
+
+    if not enemy3_left:
+        enemy3_x -= enemy3_horispeed
+        if enemy3_x <= 0: 
+            enemy3_right = False
+            enemy3_left = True
+
     """
     ================================
     Level Transition (Time Expired)
     ================================
     """
     if time <= 0 and level == 1:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -310,7 +350,7 @@ while running:
         
 
     if time <= 0 and level == 2:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -345,7 +385,7 @@ while running:
         enemy3_height = 75
 
     if time <= 0 and level == 3:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -384,7 +424,7 @@ while running:
         enemy3_height += 0.5
 
     if time <= 0 and level == 4:
-        time = 30
+        time = 3
         level += 1
         enemy_x = 50
         enemy_y = 50
@@ -415,6 +455,43 @@ while running:
         player_y = 800
 
         lifes += 1
+
+    if time <= 0 and level == 5:
+        time = 60
+        level += 1
+        enemy_x = 50
+        enemy_y = 50
+        enemy_size = 20
+        enemy_speed = 8
+
+        enemy2_x = 0
+        enemy2_y = 0
+        enemy2_height = 100
+        enemy2_width = 100
+        enemy2_speed = 5
+        enemy2_horispeed = 10
+        
+        enemy3_height = 100
+        enemy3_width = 100
+        enemy3_x = 900
+        enemy3_y = 0 
+        enemy3_speed = 5
+        enemy3_horispeed = 10
+
+        bullet_width = 0
+        bullet_height = 0
+        bullet2_height = 0
+        bullet2_width = 0
+        bullet_active = False
+        bullet2_active = False
+        enemy_bullet_speed = 0
+        enemy_bullet2_speed = 0
+
+        player_x = 450
+        player_y = 800
+        speed = 12
+
+    
 
         
 
